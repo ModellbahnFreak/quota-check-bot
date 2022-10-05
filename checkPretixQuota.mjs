@@ -2,7 +2,8 @@ async function request(url, access_token) {
     const response = await fetch(url, { headers: { Authorization: `Bearer ${access_token}` } });
     if (!response.ok) {
         throw new Error(`Error on request ${url}\r\n` +
-            `Status: ${response.status} ${response.statusText}`
+            `Status: ${response.status} ${response.statusText}` +
+            `Body: ${await tokenResponse.text()}`
         )
     }
     return await response.json();

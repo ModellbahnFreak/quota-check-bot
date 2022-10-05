@@ -49,10 +49,21 @@ export async function sendMail(rcpt, server, ...text) {
         ];
         const socket = new net.Socket();
         setTimeout(() => {
-            socket.destroy();
-            reject("Mail timeout reached");
+            if (!socket.closed) {
+                socket.destroy();
+                reject("Mail timeout reached");
+            }
         }, 1 * 60 * 1000)
-        //socket.on("data", (data) => console.log("TCP Data", data.toString("utf-8")));
+        let allData = "";
+        socket.on("data", (data) => {
+            const newData = data.toString("utf-8");
+            allData += newData;
+            //console.log("TCP Data", newData);
+            if (allData.includes("221")) {
+                console.log("SMTP Received 221 Bye. Closing.");
+                socket.destroy();
+            }
+        });
         socket.on("close", (error) => {
             if (error) {
                 reject("Error on closing")
