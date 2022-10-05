@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "name": "pretix-quota-check",
+  "version": "1.0.0",
+  "description": "Utility Bot to check if a specified quota in pretix has gone below a certain threshold",
+  "main": "index.mjs",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ModellbahnFreak/quota-check-bot.git"
+  },
+  "author": "ModellbahnFreak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ModellbahnFreak/quota-check-bot/issues"
+  },
+  "homepage": "https://github.com/ModellbahnFreak/quota-check-bot#readme"
+}
