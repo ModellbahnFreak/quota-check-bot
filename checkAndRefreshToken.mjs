@@ -1,5 +1,5 @@
 export async function refreshToken(pretix_hostname, clientId, clientSecret, tokenOrCode, isInitialCode) {
-    let auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64url");
+    let auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
     const tokenResponse = await fetch(`${pretix_hostname}/api/v1/oauth/token`, {
         method: "POST",
         body: isInitialCode
@@ -13,7 +13,8 @@ export async function refreshToken(pretix_hostname, clientId, clientSecret, toke
     });
     if (!tokenResponse.ok) {
         throw new Error(`Error on refereshing access token\r\n` +
-            `Status: ${tokenResponse.status} ${tokenResponse.statusText}`
+            `Status: ${tokenResponse.status} ${tokenResponse.statusText}\r\n` +
+            `Body: ${await tokenResponse.text()}`
         )
     }
     return await tokenResponse.json();
@@ -25,11 +26,10 @@ export async function checkAndRefresh(pretix_hostname, clientId, clientSecret, c
     });
     if (!meResponse.ok) {
         console.log("Accesss token invalid. Likely expired. Trying to refresh");
-        if (currentToken.code) {
-
-            return await refreshToken(pretix_hostname, clientId, clientSecret, currentToken.code, true);
-        } else {
+        if (currentToken.refresh_token) {
             return await refreshToken(pretix_hostname, clientId, clientSecret, currentToken.refresh_token);
+        } else {
+            return await refreshToken(pretix_hostname, clientId, clientSecret, currentToken.code, true);
         }
     }
     return currentToken;
